@@ -245,34 +245,53 @@ L.Control.Measure = L.Control.extend({
 	_updateTooltipDistance: function(total, difference) {
 		var totalRound;
 		var differenceRound;
+		var unit;
 		var measureUnit = this.options.measureUnit;
 		var precision = this.options.measureUnitPrecision;
 
 		//extensible option for multiple units
 		switch(measureUnit){
+			case "autoMetric":
+				if(total < 1000) {
+					total /=1;
+				  	difference != 1;
+				  	unit = "m";
+					break;	
+				} else {
+					total /=  1000;
+					difference /=  1000;
+					unit = "km";
+					break;	
+				}
 			case "nm":  
 				total *= 0.00053996;
 				difference	*= 0.00053996;
+				unit = "nm";
 				break;
 			case "ft":
 				total *= 3.2808;
-				difference	*= 3.2808;
+				difference *= 3.2808;
+				unit = "ft";
 				break;
 			case "yd":
 				total *=  1.0936;
-				difference	*=  1.0936;
+				difference *=  1.0936;
+				unit = "yd";
 				break;
 			case "mi":
 				total *=  0.00062137;
-				difference	*=  0.00062137;
+				difference *=  0.00062137;
+				unit = "mi";
 				break;
 			case "km":
 				total /=  1000;
-				difference	/=  1000;
+				difference /=  1000;
+				unit = "km";
 				break;
 			case "m":
 				total /=1;
 				difference != 1;
+				unit = "m";
 				break;
 			default:
 				console.error("Unit: "+measureUnit+" is not supportet by Leaflet.Measure");
@@ -281,7 +300,7 @@ L.Control.Measure = L.Control.extend({
 		totalRound = total.toFixed(precision);
 		differenceRound = difference.toFixed(precision);
 
-		var text = '<div class="leaflet-measure-tooltip-total">' + totalRound + measureUnit + '</div>';
+		var text = '<div class="leaflet-measure-tooltip-total">' + totalRound + unit + '</div>';
 		if (differenceRound > 0 && totalRound != differenceRound) {
 			text += '<div class="leaflet-measure-tooltip-difference">(+' + differenceRound + measureUnit + ')</div>';
 		}
